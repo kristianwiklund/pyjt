@@ -4,23 +4,24 @@ import pyhamtools
 import socket
 import wsjtxudp
 import socketserver
-#import gui
+import threading
+from PyQt5 import QtNetwork
+import gui
 
-class MyUDPHandler(socketserver.BaseRequestHandler):
+class myudp(QtNetwork.QUdpSocket):
 
+    def __init__(self, parent=None):
+        super(myudp, self).__init__(parent)
+        self.socket = QtNetwork.QUdpSocket(self)
+        self.socket.bind(2237)
+        self.socket.readyRead.connect(self.handle)
+    
     def handle(self):
-        data = self.request[0]
-        msg = wsjtxudp.decode(data) # this contains a dictionary with decoded data        
-        
+        while self.socket.hasPendingDatagrams():
+            data, host, port = self.socket.readDatagram(self.socket.pendingDatagramSize())
+            msg = wsjtxudp.decode(data) # this contains a dictionary with decoded data        
 
-UDP_IP = "127.0.0.1"
-UDP_PORT = 2237
-
-server= socketserver.UDPServer((UDP_IP, UDP_PORT), MyUDPHandler)
-if server:
-    server.serve_forever()
-
-
+udphandler = myudp()
 gui.setup()
 
 
