@@ -27,11 +27,37 @@ def decode_decode(d,m):
         m["grid"] = t[-1]    
         m["dx"] = len(t)>3
 
+def readqdatetime(d):
+    dt = dict()
+    dt["day"] = d.read_int64()
+    dt["ms"] = d.read_uint32()
+    dt["tspec"] = d.read_uint8()
+    if dt["tspec"] == 2:
+        dt["offset"] = d.read_int32()
+    if dt["tspec"] == 3:
+        print ("timezones are not implemented, this will fail horribly")
+
+    return(dt)
+
+def decode_qso(d, m):
+    m["timeoff"] = readqdatetime(d)
+    m["call"] = d.read_bytes()
+    m["cgrid"] = d.read_bytes()
+    m["freq"] = d.read_uint64()
+    m["mode"] = d.read_bytes()
+    m["reportsent"] = d.read_bytes()
+    m["reportrec"] = d.read_bytes()
+    m["txpower"] = d.read_bytes()
+    m["comments"] = d.read_bytes()
+    m["name"] = d.read_bytes()
+    m["timeon"] = readqdatetime(d)
+    
 def decode(x):
     d = qdatastream.Deserializer(x)
     m = dict()
     
     # read header
+    
     #print(hexdump.hexdump(x))
     
     magic = d.read_uint32()
@@ -50,7 +76,10 @@ def decode(x):
 
     if m["type"] == 2:
         decode_decode(d,m)
-        if m["cq"]:
-            print("CQ "+m["call"]+" " + m["grid"])
-            
+        #if m["cq"]:
+        #    print("CQ "+m["call"]+" " + m["grid"])
+    if m["type"] == 5:
+        decode_qso(d, m)
+        print(m)
+        
     return (m)

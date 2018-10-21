@@ -20,10 +20,14 @@ class Gui():
 
     def cleanup(self):
         # remove all old buttons
-        print("banana")
+        return
+        #print("banana")
     
     def addcq(self,msg):
         # add new button
+        # disbled for now
+        return
+    
         self.layout.addWidget(QPushButton(msg["call"]),self.cy,self.cx)
         self.cx = self.cx + 1
         if self.cx>self.maxx:
