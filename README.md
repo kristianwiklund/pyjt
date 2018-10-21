@@ -7,4 +7,5 @@ Dependencies
 - pyhamtools
 - qdatastream
 - hexdump (for debugging, might remove later)
+- PyQt 5
 
