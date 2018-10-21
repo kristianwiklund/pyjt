@@ -1,8 +1,7 @@
 # initial version: decodes decode udp messages and prints CQ messages
 
-import pyhamtools
-import socket
 import wsjtxudp
+import plistlib
 
 from PyQt5 import QtNetwork
 import gui
