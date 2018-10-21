@@ -1,14 +1,31 @@
 from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QGridLayout,QPushButton
 
-app = QApplication([])
-window = QWidget()
-layout = QGridLayout()
 
-def setup():
-    layout.addWidget(QPushButton("A"),0,0)
-    layout.addWidget(QPushButton("B"),0,1)
-    layout.addWidget(QPushButton("C"),1,0)
-    layout.addWidget(QPushButton("D"),1,1)
-    window.setLayout(layout)
-    window.show()
-    app.exec_()
+class Gui():
+    maxx=5 # no more than this number of callsigns on the same line
+    cx=0
+    cy=0
+
+    app = QApplication([])
+    window = QWidget()
+    layout = QGridLayout()
+    
+    def __init__(self):
+    
+        self.window.setLayout(self.layout)
+        self.window.show()
+
+    def start(self):
+        self.app.exec_()
+
+    def cleanup(self):
+        # remove all old buttons
+        print("banana")
+    
+    def addcq(self,msg):
+        # add new button
+        self.layout.addWidget(QPushButton(msg["call"]),self.cy,self.cx)
+        self.cx = self.cx + 1
+        if self.cx>self.maxx:
+            self.cx=0
+            self.cy = self.cy + 1

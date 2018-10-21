@@ -19,8 +19,13 @@ def decode_decode(d,m):
     m["conf"] = d.read_bool()
     m["offair"] = d.read_bool()
 
-    m["cq"] = "CQ" in m["message"]
+    m["cq"] = m["message"].startswith("CQ")
 
+    if m["cq"]:
+        t = m["message"].split(" ")
+        m["call"] = t[-2]
+        m["grid"] = t[-1]    
+        m["dx"] = len(t)>3
 
 def decode(x):
     d = qdatastream.Deserializer(x)
@@ -46,5 +51,6 @@ def decode(x):
     if m["type"] == 2:
         decode_decode(d,m)
         if m["cq"]:
-            print(m["message"])
+            print("CQ "+m["call"]+" " + m["grid"])
+            
     return (m)
