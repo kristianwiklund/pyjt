@@ -29,8 +29,9 @@ class myudp(QtNetwork.QUdpSocket):
             #           print (cic.get_all(msg["call"]))
 
             if msg["type"]==2 and msg["cq"]:
-                if msg["dtime"]>self.lasttimestamp:
-                    self.lasttimestamp = msg["dtime"]
+                if msg["time"]!=self.lasttimestamp:
+                    self.lasttimestamp = msg["time"]
+                    print("calling cleanup")
                     self.gui.cleanup()
 
                 self.gui.addcq(msg)

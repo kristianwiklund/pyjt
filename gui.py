@@ -19,6 +19,11 @@ class Gui():
         self.app.exec_()
 
     def cleanup(self):
+
+        for i in reversed(range(self.layout.count())):
+                self.layout.itemAt(i).widget().setParent(None)
+                
+        print ("deleted buttons")
         # remove all old buttons
         return
         #print("banana")
@@ -26,7 +31,10 @@ class Gui():
     def addcq(self,msg):
         # add new button
         # disbled for now
-        return
+        if msg["call"] == "CQ":
+            print (msg)
+        print (str(msg["time"])+" CQ "+msg["call"])
+
     
         self.layout.addWidget(QPushButton(msg["call"]),self.cy,self.cx)
         self.cx = self.cx + 1
