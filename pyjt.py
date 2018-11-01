@@ -9,8 +9,6 @@ import gui
 #mylol = pyhamtools.LookupLib(lookuptype="qrz")
 #cic = pyhamtools.Callinfo(mylol)
 
-
-
 class myudp(QtNetwork.QUdpSocket):
 
     lasttimestamp=0
@@ -21,13 +19,15 @@ class myudp(QtNetwork.QUdpSocket):
         self.socket.bind(2237)
         self.socket.readyRead.connect(self.handle)
         self.gui = mgui
-        
+
     def handle(self):
         while self.socket.hasPendingDatagrams():
             data, host, port = self.socket.readDatagram(self.socket.pendingDatagramSize())
             msg = wsjtxudp.decode(data) # this contains a dictionary with decoded data        
             #           print (cic.get_all(msg["call"]))
 
+            print(port)
+            msg ["udpport"]=port
             if msg["type"]==2 and msg["cq"]:
                 if msg["time"]!=self.lasttimestamp:
                     self.lasttimestamp = msg["time"]
@@ -35,9 +35,12 @@ class myudp(QtNetwork.QUdpSocket):
                     self.gui.cleanup()
 
                 self.gui.addcq(msg)
-                
+
+    
 mgui = gui.Gui()                
 udphandler = myudp(mgui)
+
+
 mgui.start()
 
 

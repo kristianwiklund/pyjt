@@ -15,7 +15,10 @@ def decode_decode(d,m):
     m["dtime"] = d.read_double()
     m["dfreq"] = d.read_uint32()
     m["mode"] = d.read_bytes()
-    m["message"] = d.read_bytes().decode("utf-8")
+    #    print (m["mode"])
+    m["messageraw"] = d.read_bytes()
+    m["message"] = m["messageraw"].decode("utf-8")
+    
     m["conf"] = d.read_bool()
     m["offair"] = d.read_bool()
 
@@ -83,3 +86,24 @@ def decode(x):
         print(m)
         
     return (m)
+
+def encode_reply(who, ident, tid, snr, dtime, dfreq, mode, msg, conf, mods):
+
+    e = qdatastream.Serializer()
+    e.write("uint32", 0xadbccbda) # magic
+    e.write("uint32", 2) #schema
+    e.write("uint32", 4) 
+    e.write("bytes", ident)
+    e.write("uint32", tid)
+    e.write("int32", snr)
+    e.write("double", dtime)
+    e.write("uint32", dfreq) 
+    e.write("bytes", mode)
+    e.write("bytes", msg)
+    e.write("bool", conf)
+    e.write("uint8", mods)
+
+    # print (e.get_value())
+    return (e.get_value())
+    
+    
